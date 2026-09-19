@@ -1,0 +1,26 @@
+#!/bin/sh
+# Minimal RAM guest initialization for locally supplied Alpine images.
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devtmpfs devtmpfs /dev
+mkdir -p /dev/pts /run /tmp
+mount -t devpts devpts /dev/pts
+mount -t tmpfs tmpfs /run
+hostname aero-linux
+for module in virtio_mmio virtio_blk virtio_net af_packet virtio-gpu xhci-pci usbhid hid-generic; do
+    modprobe "$module" 2>/dev/null || true
+done
+ip link set lo up
+if [ -e /sys/class/net/eth0 ]; then
+    ip link set eth0 up
+    udhcpc -i eth0 -b -t 3 -T 2 >/run/network.log 2>&1 &
+fi
+cat >/etc/inittab <<'INITTAB'
+hvc0::respawn:/bin/sh -l
+tty1::respawn:/bin/sh -l
+::ctrlaltdel:/sbin/poweroff
+::shutdown:/bin/sync
+INITTAB
+printf '\nAero Linux: local RAM guest. Changes do not survive poweroff.\n'
+exec /sbin/init

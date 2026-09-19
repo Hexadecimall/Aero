@@ -1,7 +1,7 @@
 # Aero
 
 Aero is a program execution and full-system emulation project. The command-line
-tool is `aero`; the planned graphical application is Aero.
+tool is `aero`; macOS builds also provide an Aero app bundle.
 
 ## Current milestone
 
@@ -11,7 +11,8 @@ calls, stack and memory operations, arithmetic flags, and relative ELF relocatio
 Linux `write`, `exit`, and `exit_group` are implemented. Native export is available.
 
 Full-system mode boots same-architecture Linux guests on macOS using hardware
-virtualization, with a serial console, optional raw disk and NAT networking.
+virtualization, with saved VMs, a graphical window, console/headless modes,
+raw disks and NAT networking.
 See [Running a Linux VM](docs/system.md) for kernel requirements and commands.
 
 See [Building and installing Aero](docs/building.md) for installation, test tools,
@@ -50,6 +51,20 @@ Performance has not been benchmarked.
 Arguments belong to the exported program at run time, not the export command.
 Use `--` before guest arguments when they include a literal `-o`.
 
+## Start a VM
+
+```sh
+aero create linux --kernel ./Image --initrd ./initramfs.cpio --vthreads 4
+aero start linux                 # Graphical window
+aero start linux --console       # Interactive terminal
+aero start linux --headless      # No window or terminal input
+aero stop linux
+```
+
+NAT is on by default. Supply a same-architecture Linux guest with virtio drivers;
+see [VM setup](docs/system.md) for local Alpine preparation, persistent disks,
+configuration, and supported guest features. `--vthreads` replaces `--cpus`.
+
 ## Limits
 
 This is an initial interpreter, not a native-speed backend. Only the instruction
@@ -59,8 +74,8 @@ and auxiliary vector are minimal. Guest memory is capped at 64 MiB for loaded
 segments and 1 MiB for the stack; execution stops after 100 million instructions.
 These are prototype safeguards, not final product capacity limits.
 
-The GUI, configuration system, JIT, cross-architecture full-system emulation,
-non-macOS virtualization backends, and guest graphics are not implemented.
+JIT, cross-architecture full-system emulation, non-macOS virtualization backends,
+3D acceleration, and automatic desktop installation are not implemented.
 CI checks macOS, Linux, and Windows builds; hardware VM boot is tested locally
 on Apple Silicon. Program mode is not a hardened isolation boundary for
 untrusted programs.

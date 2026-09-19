@@ -1,7 +1,7 @@
 # Building and installing Aero
 
-Aero currently provides a command-line prototype. There is no GUI installer or
-stable release yet. Use and redistribution are governed by the [Aero License](../LICENSE).
+Aero currently provides a command-line prototype. There is no graphical installer or
+stable release yet. macOS builds include an Aero app for launching saved VMs. Use and redistribution are governed by the [Aero License](../LICENSE).
 
 ## Requirements
 
@@ -12,7 +12,7 @@ preprocesses the runtime headers once and embeds them. The build downloads nothi
 automatically. Export needs the dynamically linked runtime libraries but does
 not launch or require compiler/SDK tools.
 
-For the full tests on Unix: Python 3, Clang with an AArch64 assembler, and LLD
+For the full tests on Unix: Python 3.11 or newer, Clang with an AArch64 assembler, and LLD
 (`ld.lld`). Native export uses library APIs inside Aero, with no subprocesses.
 
 Typical tools to install if absent:
@@ -127,7 +127,8 @@ cpack --config build/CPackConfig.cmake -C Release -G ZIP -B build/packages
 cpack --config build/CPackSourceConfig.cmake -G TGZ -B build/packages
 ```
 
-Binary archives contain `bin/aero` (or `aero.exe`) and documentation. Aero's
+Binary archives contain `bin/aero` (or `aero.exe`), documentation, and local guest
+preparation helpers. macOS archives also include `share/aero/Aero.app`. Aero's
 dynamically linked LLVM/Clang/LLD libraries must be installed through the system
 package manager in versions compatible with that build. These archives do not
 bundle those dependencies. Prefer the source installer when an exact binary ABI

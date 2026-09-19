@@ -5,16 +5,21 @@ if(NOT UNIX)
   set(aeroRuntimeSource "")
   configure_file(src/embedded_runtime.hpp.in generated/embedded_runtime.hpp @ONLY)
 endif()
-add_executable(aero src/main.cpp src/aot.cpp src/system.cpp)
+add_executable(aero src/main.cpp src/aot.cpp src/system.cpp src/systemControl.cpp src/vmCommands.cpp)
 if(APPLE)
   enable_language(OBJCXX)
-  target_sources(aero PRIVATE src/systemMac.mm)
+  target_sources(aero PRIVATE src/systemMac.mm src/consoleInput.cpp)
   set_source_files_properties(src/systemMac.mm PROPERTIES COMPILE_OPTIONS "-fobjc-arc" )
-  target_link_libraries(aero PRIVATE "-framework Virtualization" "-framework Foundation")
-  set_property(TARGET aero APPEND PROPERTY LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/cmake/virtualization.entitlements)
+  target_link_libraries(aero PRIVATE "-framework Virtualization" "-framework Foundation" "-framework AppKit")
+  set_property(TARGET aero APPEND PROPERTY LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/cmake/virtualization.entitlements ${CMAKE_CURRENT_SOURCE_DIR}/cmake/AeroInfo.plist)
   add_custom_command(TARGET aero POST_BUILD
     COMMAND /usr/bin/codesign --force --sign - --entitlements
       ${CMAKE_CURRENT_SOURCE_DIR}/cmake/virtualization.entitlements $<TARGET_FILE:aero>
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/Aero.app/Contents/MacOS
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:aero> ${CMAKE_CURRENT_BINARY_DIR}/Aero.app/Contents/MacOS/aero
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/cmake/AeroInfo.plist ${CMAKE_CURRENT_BINARY_DIR}/Aero.app/Contents/Info.plist
+    COMMAND /usr/bin/codesign --force --sign - --entitlements
+      ${CMAKE_CURRENT_SOURCE_DIR}/cmake/virtualization.entitlements ${CMAKE_CURRENT_BINARY_DIR}/Aero.app
     VERBATIM)
 endif()
 target_include_directories(aero PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/generated)
@@ -62,6 +67,11 @@ include(GNUInstallDirs)
 install(TARGETS aero RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES README.md CONTRIBUTING.md LICENSE DESTINATION ${CMAKE_INSTALL_DOCDIR})
 install(FILES docs/building.md docs/system.md DESTINATION ${CMAKE_INSTALL_DOCDIR}/docs)
+install(FILES scripts/prepareAlpine.py DESTINATION ${CMAKE_INSTALL_DATADIR}/aero/scripts)
+install(FILES guest/init guest/profile.sh DESTINATION ${CMAKE_INSTALL_DATADIR}/aero/guest)
+if(APPLE)
+  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Aero.app DESTINATION ${CMAKE_INSTALL_DATADIR}/aero)
+endif()
 if(UNIX)
   set_target_properties(aero PROPERTIES INSTALL_RPATH "${LLVM_LIBRARY_DIRS};${LLD_INSTALL_PREFIX}/lib")
 endif()
@@ -74,11 +84,13 @@ if(BUILD_TESTING)
   add_test(NAME system-help COMMAND aero --system --help)
 endif()
 if(BUILD_TESTING AND UNIX)
-  find_package(Python3 COMPONENTS Interpreter REQUIRED)
+  find_package(Python3 3.11 COMPONENTS Interpreter REQUIRED)
   find_program(aeroClang NAMES clang REQUIRED)
   find_program(aeroLld NAMES ld.lld REQUIRED)
   add_test(NAME system-options
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/systemOptions.py $<TARGET_FILE:aero>)
+  add_test(NAME saved-vms
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/vmCommands.py $<TARGET_FILE:aero> ${CMAKE_CURRENT_BINARY_DIR})
   add_test(NAME linux-aarch64-program
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/program.py
       $<TARGET_FILE:aero> ${aeroClang} ${aeroLld}
