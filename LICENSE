@@ -1,0 +1,163 @@
+Aero License
+Version 1.0
+
+1. Scope and definitions
+
+This license covers the Aero source code, executable software, documentation,
+and runtime components supplied under this license (the "Software"). Each
+copyright holder grants rights only to material that holder is authorized to
+license. Separately licensed components retain their own terms.
+
+"You" means the person or organization exercising the rights in this license.
+When acting for an employer or client, that employer or client is the user for
+purposes of eligibility; an individual's personal eligibility does not exempt
+an otherwise ineligible organization.
+
+"Commercial Use" means use in operating a business, providing a paid service,
+developing or supplying a commercial product, or otherwise pursuing commercial
+advantage. It includes using the Aero application or command-line tool inside
+a business, whether or not Aero is modified, embedded, or redistributed.
+
+"Independent Developer" means an individual working independently or a
+developer-owned and developer-operated business that is not owned or controlled
+by another business. Incorporation alone does not disqualify an independent
+developer. Work performed on behalf of another organization is assessed under
+that organization's eligibility.
+
+"Product" means a product or service incorporating the Software, including its
+editions and substantially equivalent offerings. Related offerings may not be
+artificially split to avoid the revenue threshold.
+
+"Annual Product Revenue" means gross revenue attributable to that Product
+during the preceding twelve months, including sales, subscriptions, licensing,
+advertising, and paid services sold as part of the Product, less refunds and
+sales taxes collected for a government. It is measured across all distributors
+and controlled entities supplying the Product. Unrelated products, personal
+income, company valuation, and investment funding are not counted. Amounts are
+measured in United States dollars; other currencies are converted at the
+exchange rate applicable when the revenue was received.
+
+2. Free-use permissions
+
+Subject to this license, you may obtain, inspect, build, run, copy, modify, and
+distribute the Software and your modifications without paying a license fee:
+
+  a. for personal, noncommercial purposes; or
+
+  b. as an Independent Developer, for a Product whose Annual Product Revenue
+     is less than USD 1,000,000. This includes using Aero to develop, test,
+     operate, and distribute that qualifying Product.
+
+An Independent Developer may develop a new Product under paragraph (b) before
+it earns revenue. Eligibility is evaluated separately for each Product. Free
+eligibility for one Product does not authorize use for an ineligible Product or
+for unrelated commercial operations.
+
+You may also inspect, build, test, and modify Aero solely to evaluate whether to
+obtain a commercial license, or to prepare an unpaid contribution to Aero. This
+permission does not authorize production use, paid customer services, or other
+commercial operation of the Software.
+
+The permission to distribute includes source and executable forms. Recipients
+receive their rights directly under this license and must qualify for their
+own use. Your eligibility does not exempt your customers, employers, clients,
+or other recipients from the commercial licensing requirement.
+
+3. Paid commercial license
+
+Commercial Use outside the Independent Developer exception requires a separate
+paid commercial license from the applicable copyright holder or its authorized
+licensing representative before that use begins. This requirement applies to
+the Aero application, command-line tool, source code, and embedded runtime alike;
+there is no separate company-size exemption.
+
+At USD 1,000,000 or more in Annual Product Revenue, the Independent Developer
+exception no longer applies to that Product. Obtain a paid commercial license
+or stop the affected Commercial Use. Reaching the threshold does not create
+retroactive fees for earlier use that qualified under section 2.
+
+Fees, payment arrangements, and additional commercial permissions are established
+by the separate commercial agreement. This license sets no automatic fee and
+does not itself constitute a paid commercial license. Contact Aero's publisher
+through its official project channel to arrange commercial licensing.
+
+4. Visible acknowledgment
+
+If you distribute or publicly offer a product or service incorporating the
+Software, make its use of Aero easy for an ordinary user to spot. A statement
+such as "Uses Aero" or "Powered by Aero" is sufficient.
+
+Placement and format are flexible. For example, the acknowledgment may appear
+in a readily accessible product page, documentation overview, normal application
+information screen, or another similarly visible location. No dedicated credits
+section, dependency list, splash screen, startup message, or logo is required.
+
+An acknowledgment buried solely in source code, obscure legal files, or an
+otherwise difficult-to-find location is insufficient. An unmodified Aero
+distribution whose normal presentation already clearly identifies it as Aero
+satisfies this acknowledgment requirement.
+
+Merely running an unrelated program with Aero does not require adding an Aero
+acknowledgment to that program. Incorporating Aero code or runtime components
+into a distributed program does require acknowledgment. A commercial license
+changes this requirement only if it expressly says so.
+
+5. Copies, modifications, and output
+
+Include this license with copies of the Software that you distribute. Retain
+applicable copyright and license notices. Identify modified distributions as
+modified; do not misrepresent them as official Aero releases. You may choose
+terms for your own original additions, but those terms must not remove the
+conditions applying to Aero material or purport to grant rights you do not hold.
+
+This license does not require publication of your own source code or private
+modifications. It does not grant ownership of, or impose Aero licensing terms
+on, guest programs, guest operating systems, user data, or other independent
+material merely processed by Aero.
+
+Generated or translated output that includes Aero code or runtime components
+remains subject to this license for those components. Independent portions of
+that output retain their existing rights and licenses. Output containing no
+Aero material is not covered solely because Aero produced it.
+
+6. Contributions and names
+
+Unless expressly agreed otherwise in writing, code intentionally submitted and
+accepted for inclusion in Aero is supplied under this license. Contributors
+retain their copyrights. Submission does not assign ownership or automatically
+authorize others to offer a contributor's material under different commercial
+terms; any such authority must be obtained separately.
+
+You may use the Aero name to identify the Software and satisfy section 4. No
+broader trademark permission or right to claim endorsement is granted.
+
+7. Compliance and termination
+
+Permissions under this license depend on compliance with its conditions. If
+you breach a condition, stop the affected activity until the breach is corrected
+or the relevant copyright holder authorizes it in writing. Correcting the
+breach restores permissions for future compliant activity, but does not erase
+liability for earlier unauthorized activity. Recipients who remain compliant
+do not lose their permissions solely because a distributor breached this license.
+
+Rights granted for a particular version remain available under this license
+while its conditions are met. Publication of a later license version does not
+by itself change the license for copies already received under this version.
+No rights beyond those expressly granted are implied.
+
+8. Warranty and liability
+
+The Software is provided as available, without promises of fitness for a
+particular task, merchantability, noninfringement, compatibility, performance,
+security, uninterrupted operation, or support. You are responsible for assessing
+its suitability and protecting your systems and data.
+
+To the extent permitted by applicable law, the copyright holders and contributors
+are not liable for losses or damages arising from the Software or this license,
+including lost revenue, lost data, interrupted operations, or consequential loss.
+This section does not exclude rights or liabilities that applicable law does not
+allow to be excluded. A separate written agreement may provide other warranties
+or responsibilities for its parties.
+
+If a provision cannot be enforced under applicable law, the remaining provisions
+continue to apply to the extent permitted by that law.

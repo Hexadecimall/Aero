@@ -1,0 +1,7 @@
+/build/
+/build-*/
+/stage/
+/CMakeUserPresets.json
+.DS_Store
+__pycache__/
+*.o
