@@ -22,20 +22,27 @@ ctest --test-dir build --output-on-failure
 ./build/native-echo "Hello from native Aero"
 ```
 
-Building requires a C++20 compiler and CMake. Tests additionally use Python 3,
-Clang's AArch64 assembler, and `ld.lld`. No dependencies are downloaded by the
-build. Tests are opt-in; omit `-DBUILD_TESTING=ON` to build just the executable.
+Building requires a C++20 compiler and CMake. Unix builds also require matching
+LLVM, Clang, and LLD development libraries and the Clang compiler to prepare the
+embedded runtime at build time. Tests additionally use Python 3 and `ld.lld`.
+No dependencies are downloaded by the build. Tests are opt-in.
 
 The tests assemble and link a real Linux executable from `tests/echo.S`; the
 runtime executes its machine instructions, without invoking a host echo command.
 
 `-o` translates reachable instructions into C++ operations and direct branches,
-then invokes the local `c++` compiler to create an optimized host-native binary.
+then uses embedded Clang and LLD libraries to compile and link in-process.
+Export launches no compiler, linker, shell, or signing subprocess. Runtime header
+content is prepared when Aero is built, so export needs no installed compiler,
+development headers, or SDK at export time. Aero dynamically links to system
+backend libraries; the installer installs missing dependencies in their normal
+package-manager locations rather than bundling private copies.
 The exported program contains its guest image and Linux compatibility support;
 it does not require Aero or the input ELF to run. Guest instruction fetch/decode
 is removed; indirect returns dispatch to translated addresses. This initial
-export targets the current Unix host, requires a C++20
-compiler, and retains guest-memory checks. Performance has not been benchmarked.
+export targets macOS or glibc Linux on AArch64/x86-64 and retains guest-memory
+checks. Exported programs use the target OS's standard runtime libraries.
+Performance has not been benchmarked.
 Arguments belong to the exported program at run time, not the export command.
 Use `--` before guest arguments when they include a literal `-o`.
 

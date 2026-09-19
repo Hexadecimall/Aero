@@ -20,13 +20,14 @@ jobs:
           persist-credentials: false
       - name: Install Linux test tools
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y clang lld python3
+        run: sudo apt-get update && sudo apt-get install -y clang lld llvm-dev libclang-dev libclang-cpp-dev liblld-dev python3
       - name: Install macOS test tools
         if: runner.os == 'macOS'
         run: |
           brew install llvm lld
           echo "$(brew --prefix llvm)/bin" >> "$GITHUB_PATH"
           echo "$(brew --prefix lld)/bin" >> "$GITHUB_PATH"
+          echo "CMAKE_PREFIX_PATH=$(brew --prefix llvm);$(brew --prefix lld)" >> "$GITHUB_ENV"
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
       - name: Build
@@ -38,5 +39,12 @@ jobs:
       - name: Verify installed CLI
         shell: bash
         run: ./stage/bin/aero --version
+      - name: Test installed exporter without tools
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          mkdir -p build/empty-path
+          PATH="$PWD/build/empty-path" SDKROOT=/nonexistent DEVELOPER_DIR=/nonexistent ./stage/bin/aero --program ./build/fixtures/linux-program -o ./build/installed-native
+          PATH="$PWD/build/empty-path" ./build/installed-native "Installed export works"
       - name: Package
         run: cpack --config build/CPackConfig.cmake -C Release -G ZIP -B build/packages

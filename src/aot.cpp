@@ -1,13 +1,12 @@
 #define aeroRuntimeOnly
 #include "main.cpp"
 #include "embedded_runtime.hpp"
+#include "nativeCompiler.hpp"
 #include <filesystem>
 #include <map>
 #include <set>
 #include <sstream>
 #if defined(__unix__) || defined(__APPLE__)
-#include <cerrno>
-#include <sys/wait.h>
 #include <unistd.h>
 #endif
 
@@ -119,9 +118,9 @@ void exportNative(const std::string& input, const std::string& output) {
     std::vector<char> name(pattern.begin(),pattern.end()); name.push_back(0);
     if(!mkdtemp(name.data())) fail("cannot create native build directory beside output");
     struct Cleanup { fs::path path; ~Cleanup() { std::error_code ec; fs::remove_all(path,ec); } } cleanup{fs::path(name.data())};
-    auto source=cleanup.path/"program.cpp", binary=cleanup.path/"program";
-    std::ofstream generated(source);
-    generated << "#define aeroRuntimeOnly\n" << aeroRuntimeSource
+    auto binary=cleanup.path/"program";
+    std::ostringstream generated;
+    generated << aeroRuntimeSource
               << "\nstatic int translated(Machine& m) {\n" << body << "}\n"
                  "int main(int argc,char** argv) { try {\n"
                  "const std::vector<unsigned char> bytes={";
@@ -129,17 +128,7 @@ void exportNative(const std::string& input, const std::string& output) {
     generated << "};\nMachine m; m.loadBytes(bytes,std::vector<std::string>(argv,argv+argc));"
                  "return translated(m); } catch(const std::exception& e) {"
                  "std::cerr<<\"aero: \"<<e.what()<<'\\n'; return 1; }}\n";
-    generated.close(); if(!generated) fail("cannot write native translation");
-    std::string sourceName=source.string(), binaryName=binary.string();
-    pid_t child=fork();
-    if(child<0) fail("cannot start native compiler");
-    if(child==0) {
-        execlp("c++","c++","-std=c++20","-O3","-x","c++",sourceName.c_str(),"-o",binaryName.c_str(),static_cast<char*>(nullptr));
-        _exit(127);
-    }
-    int status=0;
-    while(waitpid(child,&status,0)<0) if(errno!=EINTR) fail("cannot wait for native compiler");
-    if(!WIFEXITED(status) || WEXITSTATUS(status)!=0) fail("native compilation failed; a working C++20 compiler named c++ is required");
+    compileNative(generated.str(), cleanup.path, binary);
     fs::rename(binary,destination);
     std::cout << "Created " << output << '\n';
 #else
