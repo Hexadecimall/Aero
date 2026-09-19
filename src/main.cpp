@@ -232,12 +232,15 @@ public:
 };
 }
 #ifndef aeroRuntimeOnly
+#include "system.hpp"
 void exportNative(const std::string& input, const std::string& output);
 int main(int argc, char** argv) {
     try {
+        if (argc >= 2 && std::string(argv[1]) == "--system") return systemCommand(argc, argv);
         if (argc == 2 && std::string(argv[1]) == "--version") { std::cout << "aero 0.1.0\n"; return 0; }
         if (argc == 1 || (argc == 2 && std::string(argv[1]) == "--help")) {
-            std::cout << "Usage: aero --program ./program [-o ./native-program] [--] [arguments...]\n"; return 0;
+            std::cout << "Usage: aero --program ./program [-o ./native-program] [--] [arguments...]\n"
+                         "       aero --system --kernel Image [options] (see --system --help)\n"; return 0;
         }
         if (argc < 3 || std::string(argv[1]) != "--program") fail("use aero --program ./program [arguments...]");
         std::vector<std::string> args{argv[2]};

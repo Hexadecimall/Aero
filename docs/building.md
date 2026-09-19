@@ -134,6 +134,7 @@ bundle those dependencies. Prefer the source installer when an exact binary ABI
 match is unavailable. Third-party libraries retain their own licenses.
 Source
 archives exclude build output and repository metadata. Both include the Aero
-license; its conditions apply to use and redistribution. Packaging does not sign,
-notarize, or publish a release. Validate the intended target platforms before
-announcing a release.
+license; its conditions apply to use and redistribution. The macOS CLI is ad-hoc
+signed during the build for virtualization. Packaging does not apply Developer ID
+signing, notarize, or publish a release. Validate the intended target platforms
+before announcing a release.

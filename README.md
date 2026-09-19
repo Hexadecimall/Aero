@@ -10,6 +10,10 @@ executables on macOS. It supports compiler-generated integer code, recursive
 calls, stack and memory operations, arithmetic flags, and relative ELF relocations.
 Linux `write`, `exit`, and `exit_group` are implemented. Native export is available.
 
+Full-system mode boots same-architecture Linux guests on macOS using hardware
+virtualization, with a serial console, optional raw disk and NAT networking.
+See [Running a Linux VM](docs/system.md) for kernel requirements and commands.
+
 See [Building and installing Aero](docs/building.md) for installation, test tools,
 Windows build instructions, and portable archives.
 
@@ -55,10 +59,11 @@ and auxiliary vector are minimal. Guest memory is capped at 64 MiB for loaded
 segments and 1 MiB for the stack; execution stops after 100 million instructions.
 These are prototype safeguards, not final product capacity limits.
 
-The GUI, configuration system, full-system mode, hardware acceleration, JIT,
-additional architectures, and graphics support are not implemented. The source
-has not yet been validated on other hosts. This prototype is not a hardened
-isolation boundary for untrusted programs.
+The GUI, configuration system, JIT, cross-architecture full-system emulation,
+non-macOS virtualization backends, and guest graphics are not implemented.
+CI checks macOS, Linux, and Windows builds; hardware VM boot is tested locally
+on Apple Silicon. Program mode is not a hardened isolation boundary for
+untrusted programs.
 
 Native export supports the same small instruction subset and emits explicit
 failure paths for unsupported instructions. Indirect targets must already be
